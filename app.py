@@ -1,30 +1,27 @@
 import joblib
+from flask import Flask, render_template, request
 
-# Load saved model and vectorizer
+app = Flask(__name__)
+
 model = joblib.load("model.pkl")
 vectorizer = joblib.load("vectorizer.pkl")
 
-print("=== Email Spam Classifier ===")
+@app.route("/", methods=["GET", "POST"])
+def home():
+    prediction = None
+    message = ""
 
-while True:
-    # Get user input
-    message = input("\nEnter a message: ")
+    if request.method == "POST":
+        message = request.form["message"]
+        message_vector = vectorizer.transform([message])
+        result = model.predict(message_vector)
 
-    # Convert text into vector
-    message_vector = vectorizer.transform([message])
+        if result[0] == 1:
+            prediction = "SPAM"
+        else:
+            prediction = "HAM"
 
-    # Predict
-    prediction = model.predict(message_vector)
+    return render_template("index.html", prediction=prediction, message=message)
 
-    # Output
-    if prediction[0] == 1:
-        print("Prediction: SPAM")
-    else:
-        print("Prediction: HAM")
-
-    # Continue or stop
-    choice = input("\nDo you want to test another message? (yes/no): ")
-
-    if choice.lower() != "yes":
-        print("Program ended.")
-        break
+if __name__ == "__main__":
+    app.run(debug=True)

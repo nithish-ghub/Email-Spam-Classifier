@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Email Spam Classifier</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #0f172a;
+            color: white;
+            text-align: center;
+            padding: 50px;
+        }
+        .box {
+            background: #1e293b;
+            padding: 30px;
+            border-radius: 15px;
+            width: 600px;
+            margin: auto;
+        }
+        textarea {
+            width: 90%;
+            height: 120px;
+            padding: 15px;
+            border-radius: 10px;
+            border: none;
+            font-size: 16px;
+        }
+        button {
+            margin-top: 20px;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            background: #38bdf8;
+            color: #000;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .result {
+            margin-top: 25px;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .spam {
+            color: #f87171;
+        }
+        .ham {
+            color: #4ade80;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h1>Email Spam Classifier</h1>
+        <p>Enter an email/message to check whether it is spam or ham.</p>
+
+        <form method="POST">
+            <textarea name="message" placeholder="Type your message here..." required>{{ message }}</textarea>
+            <br>
+            <button type="submit">Check Message</button>
+        </form>
+
+        {% if prediction %}
+            <div class="result {% if prediction == 'SPAM' %}spam{% else %}ham{% endif %}">
+                Prediction: {{ prediction }}
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
